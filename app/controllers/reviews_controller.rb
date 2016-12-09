@@ -1,34 +1,26 @@
 class ReviewsController < ApplicationController
-  before_action :authenticate
 
+  before_filter :authorize, only: :create
+  
   def create
-    @product = Product.find(params[:product_id])
+    @product = Product.find params[:product_id].to_i
     @review = @product.reviews.new(review_params)
-    @review.user_id = current_user.id
-    if @review.save
-      redirect_to @product
-    else
-      flash[:error] = @review.errors.full_messages[0]
-      redirect_to @product
-    end
-  end
+    @review.user = current_user
 
-  def destroy
-    @product = Product.find(params[:product_id])
-    @review = @product.reviews.find(params[:id])
-    @review.destroy
-    redirect_to product_path(@product)
+    if @review.save
+      redirect_to :products, notice: 'Review submitted'
+    else
+      render @product
+    end
   end
 
   private
-    def review_params
-      params.require(:review).permit(:rating, :description)
-    end
 
-    def authenticate
-    unless current_user
-      flash[:error] = "You must be logged in to access this section"
-      redirect_to Product.find(params[:product_id])
-    end
+  def review_params
+    params.require(:review).permit(
+      :description,
+      :rating
+    )
   end
+
 end
