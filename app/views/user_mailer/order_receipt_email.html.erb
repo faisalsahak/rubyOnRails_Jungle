@@ -6,9 +6,10 @@
   <body>
     <h1>
       You have ordered the following item(s),
-      <%= @order.id %>
-      <%= @order.total_cents %>
-    </h1>
-    <p>Thanks for your order.  Have a great day!</p>
+    Your order id is   <%= @order.id %> '</br>' And
+    Your Total is $ <%= @order.total_cents / 100 %>
+    your ordered items <%= @item %>   
+   </h1>
+    <p>Thanks for shopping with us.  Have a great day!</p>
   </body>
 </html>
